@@ -217,6 +217,3 @@ export default function EditAuctionPage() {
     </Layout>
   );
 }
-
-
-//new comment
