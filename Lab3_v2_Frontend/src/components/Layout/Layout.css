@@ -1,0 +1,189 @@
+/* ================= ROOT CONTAINER ================= */
+
+.layout-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #ffdf3e, #fd77ba);
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+  padding: 1rem 2rem;
+}
+
+/* Generic row styling */
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.5rem 0;
+  flex-wrap: wrap; /* important for responsiveness */
+}
+
+/* ================= ROW 1 ================= */
+
+.nav-logo {
+  height: 65px;
+  cursor: pointer;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Buttons row 1 */
+
+.login-btn,
+.account-btn,
+.logout-btn {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.login-btn {
+  background-color: #2563eb;
+  color: white;
+}
+
+.login-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.account-btn {
+  background: #eeeeee;
+}
+
+.account-btn:hover {
+  background: #dddddd;
+}
+
+.logout-btn {
+  background: #ff4d4d;
+  color: white;
+}
+
+.logout-btn:hover {
+  background: #e63939;
+}
+
+/* ================= ROW 2 ================= */
+
+.nav-row-2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap; /* responsive */
+}
+
+/* Return Button */
+
+.return-btn {
+  background: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  transition: 0.2s;
+}
+
+.return-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ================= SEARCH ================= */
+
+.nav-search {
+  width: 650px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 999px;
+  overflow: hidden;
+  height: 52px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  border: 2px solid #F45E40;
+}
+
+.nav-search input {
+  flex: 1;
+  border: none;
+  padding: 0.9rem 1.2rem;
+  font-size: 15px;
+  background: transparent;
+}
+
+.nav-search input:focus {
+  outline: none;
+}
+
+.nav-search button {
+  border: none;
+  padding: 0 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #F45E40;
+  color: white;
+  height: 100%;
+}
+
+/* ================= CREATE BUTTON ================= */
+
+.create-btn {
+  white-space: nowrap;
+  padding: 0.9rem 1.5rem;
+  border-radius: 999px;
+  border: none;
+  background: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  height: 52px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  border: 2px solid #F45E40;
+}
+
+.create-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ================= PAGE CONTENT ================= */
+
+.layout-content {
+  flex: 1;
+  padding: 2rem;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+
+  .nav-row-2 {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .nav-search {
+    width: 100%;
+  }
+
+  .create-btn {
+    width: 100%;
+  }
+
+  .return-btn {
+    width: 100%;
+  }
+}

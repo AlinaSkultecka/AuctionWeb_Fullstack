@@ -1,0 +1,106 @@
+/* Full screen center */
+.auth-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #ffdf3e, #fd77ba);
+}
+
+/* Main card */
+.auth-card {
+  width: 850px;
+  height: 500px;
+  display: flex;
+  border-radius: 20px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* LEFT SIDE */
+.auth-left {
+  flex: 1;
+  background: #b1d3fff8;
+  color: rgb(0, 0, 0);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-left p {
+  font-size: 30px;
+  line-height: 1.2;
+  font-family: "Averia Libre", cursive;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+
+  justify-content: center;   /* vertical center */
+  align-items: center;       /* horizontal center */
+  text-align: center;        /* center text */
+}
+
+/* RIGHT SIDE */
+.auth-right {
+  flex: 1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-right h2 {
+  margin-bottom: 30px;
+  color: #1e293b;
+}
+
+/* Form styling */
+.auth-right form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth-right input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+}
+
+.auth-right input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.auth-right button {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #ec4899;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.auth-right button:hover {
+  opacity: 0.9;
+}
+
+.auth-logo {
+  width: 400px;
+}
+
+/* Switch link */
+.switch-mode {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.switch-mode span {
+  color: #ec4899;
+  cursor: pointer;
+  font-weight: 500;
+}

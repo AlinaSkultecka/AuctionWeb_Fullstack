@@ -1,0 +1,90 @@
+.home-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, oklab(90.445% -0.02181 0.16908), #fd77ba);
+  display: flex;
+  flex-direction: column; 
+}
+
+.home-content {
+  text-align: center;
+  font-family: "Averia Libre", cursive;
+}
+
+.home-logo {
+  width: 420px;   /* Big logo */
+  max-width: 90%;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.home-title {
+  margin: 0;
+  font-size: 40px;
+  color: #0f172a;
+}
+
+.home-subtitle {
+  margin: 10px 0 30px 0;
+  color: #000000;
+  font-size: 20px;
+}
+
+.home-login-btn {
+  padding: 14px 40px;
+  border-radius: 999px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+
+  background: #f97316; /* same orange as search */
+  color: white;
+  font-family: "Averia Libre", cursive;
+
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+  transition: 0.2s;
+}
+
+.home-login-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
+
+/* Preview section */
+
+.home-preview-section {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 20px;
+  font-family: "Averia Libre", cursive;
+}
+
+.preview-title {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 24px;
+  color: #0f172a;
+}
+
+.preview-loading {
+  text-align: center;
+  padding: 20px;
+}
+
+.view-all-btn {
+  display: block;
+  margin: 30px auto 50px auto;
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: none;
+  background: #F45E40;
+  color: white;
+  font-family: "Averia Libre", cursive;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.view-all-btn:hover {
+  transform: translateY(-2px);
+}

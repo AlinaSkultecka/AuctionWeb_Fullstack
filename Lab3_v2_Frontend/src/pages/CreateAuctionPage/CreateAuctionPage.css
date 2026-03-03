@@ -1,0 +1,121 @@
+/* ================= CONTAINER ================= */
+
+.create-container {
+  max-width: 800px;              /* smaller width */
+  margin: 0 auto 20px auto;   /* less vertical space */
+  padding: 0 15px;
+}
+
+/* ================= CARD ================= */
+
+.create-card {
+  background: white;
+  padding: 35px 40px;            /* smaller padding */
+  border-radius: 22px;           /* slightly smaller radius */
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;                     /* reduced spacing */
+}
+
+/* ================= HEADER ================= */
+
+.create-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.create-return-btn {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.create-return-btn:hover {
+  transform: translateY(-2px);
+  background: #e5e7eb;
+}
+
+/* ================= TITLE ================= */
+
+.create-card h2 {
+  margin: 0;
+  font-size: 24px;               /* smaller title */
+  font-weight: 700;
+}
+
+/* ================= FORM ================= */
+
+.create-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;                     /* smaller spacing */
+}
+
+/* Inputs & textarea */
+
+.create-card input,
+.create-card textarea {
+  padding: 11px 13px;            /* slightly smaller inputs */
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  transition: 0.2s;
+  font-family: inherit;
+}
+
+.create-card textarea {
+  min-height: 90px;              /* smaller textarea */
+  resize: vertical;
+}
+
+.create-card input:focus,
+.create-card textarea:focus {
+  outline: none;
+  border-color: #ec4899;
+  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+}
+
+/* ================= BUTTON ================= */
+
+.create-card button {
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ec4899, #f43f5e);
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.create-card button:hover {
+  transform: translateY(-2px);
+}
+
+.create-card button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ================= ERROR ================= */
+
+.error-box {
+  color: #b91c1c;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 700px) {
+  .create-card {
+    padding: 25px 20px;
+  }
+}
