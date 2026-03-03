@@ -21,7 +21,7 @@ type Auction = {
 
 export default function AuctionsPage() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth(); 
 
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [query, setQuery] = useState("");
@@ -60,10 +60,6 @@ export default function AuctionsPage() {
     );
   }, [auctions, query]);
 
-  const goToDetails = (id: number) => {
-    navigate(`/auctions/${id}`);
-  };
-
   return (
     <Layout
       showSearch={true}
@@ -71,6 +67,25 @@ export default function AuctionsPage() {
       searchQuery={query}
       onSearchChange={setQuery}
     >
+
+      {/* 🔹 Show Create Auction Button ONLY if logged in */}
+      {isAuthenticated && (
+        <div style={{ marginBottom: "20px", textAlign: "right" }}>
+          <button
+            className="create-auction-btn"
+            onClick={() => navigate("/create-auction")}
+          >
+            + Create Auction
+          </button>
+        </div>
+      )}
+
+      {/* 🔹 Show message if NOT logged in */}
+      {!isAuthenticated && (
+        <div className="info-message">
+          Login to create auctions and place bids.
+        </div>
+      )}
 
       {loading && (
         <div className="empty-state">Loading auctions...</div>
