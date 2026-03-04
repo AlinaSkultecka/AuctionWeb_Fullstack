@@ -32,9 +32,9 @@ export default function HomePage() {
       <div className="home-content">
 
         {/* HERO SECTION */}
-        <img src={logo} alt="BookBit Logo" className="home-logo" />
+        <img src={logo} alt="BookBid Logo" className="home-logo" />
 
-        <h1 className="home-title">Welcome to BookBit</h1>
+        <h1 className="home-title">Welcome to BookBid</h1>
         <p className="home-subtitle">
           Discover books. Place bids. Win auctions.
         </p>
