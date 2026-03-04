@@ -1,6 +1,4 @@
 import { useMemo, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
 import Layout from "../../components/Layout/Layout";
 import "./AuctionsPage.css";
 import AuctionList from "../../components/AuctionList/AuctionList";
@@ -20,11 +18,9 @@ type Auction = {
 };
 
 export default function AuctionsPage() {
-  const navigate = useNavigate();
-  const { isAuthenticated } = useAuth(); 
-
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [query, setQuery] = useState("");
+  const [showEnded, setShowEnded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,14 +47,20 @@ export default function AuctionsPage() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return auctions;
+    const now = new Date();
 
-    return auctions.filter(
-      (a) =>
+    return auctions.filter((a) => {
+      const matchesSearch =
         a.bookTitle.toLowerCase().includes(q) ||
-        a.author.toLowerCase().includes(q)
-    );
-  }, [auctions, query]);
+        a.author.toLowerCase().includes(q);
+
+      const isEnded = new Date(a.endDate) < now;
+
+      const matchesStatus = showEnded ? isEnded : !isEnded;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [auctions, query, showEnded]);
 
   return (
     <Layout
@@ -66,27 +68,9 @@ export default function AuctionsPage() {
       showReturn={false}
       searchQuery={query}
       onSearchChange={setQuery}
+      showEnded={showEnded}
+      onToggleEnded={() => setShowEnded(!showEnded)}
     >
-
-      {/* 🔹 Show Create Auction Button ONLY if logged in */}
-      {isAuthenticated && (
-        <div style={{ marginBottom: "20px", textAlign: "right" }}>
-          <button
-            className="create-auction-btn"
-            onClick={() => navigate("/create-auction")}
-          >
-            + Create Auction
-          </button>
-        </div>
-      )}
-
-      {/* 🔹 Show message if NOT logged in */}
-      {!isAuthenticated && (
-        <div className="info-message">
-          Login to create auctions and place bids.
-        </div>
-      )}
-
       {loading && (
         <div className="empty-state">Loading auctions...</div>
       )}
@@ -106,7 +90,6 @@ export default function AuctionsPage() {
       {!loading && !error && filtered.length > 0 && (
         <AuctionList auctions={filtered} />
       )}
-
     </Layout>
   );
 }

@@ -11,6 +11,8 @@ type LayoutProps = {
   hideCreateButton?: boolean;
   searchQuery?: string;
   onSearchChange?: (value: string) => void;
+  showEnded?: boolean;
+  onToggleEnded?: () => void;
 };
 
 export default function Layout({
@@ -19,10 +21,12 @@ export default function Layout({
   showReturn = false,
   hideCreateButton = false,
   searchQuery = "",
-  onSearchChange
+  onSearchChange,
+  showEnded = false,
+  onToggleEnded
 }: LayoutProps) {
   const navigate = useNavigate();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
 
   return (
     <div className="layout-container">
@@ -39,7 +43,7 @@ export default function Layout({
               src={logo}
               alt="BookBit"
               className="nav-logo"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/auctions")}
             />
           </div>
 
@@ -47,6 +51,14 @@ export default function Layout({
           <div className="nav-right">
             {isAuthenticated ? (
               <>
+                {user?.isAdmin && (
+                <button
+                  className="nav-btn"
+                  onClick={() => navigate("/admin")}
+                >
+                  Admin Panel
+                </button>
+              )}
                 <button
                   className="account-btn"
                   onClick={() => navigate("/account")}
@@ -83,7 +95,7 @@ export default function Layout({
             {showReturn && (
               <button
                 className="return-btn"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate("/auctions")}
               >
                 ← Return
               </button>
@@ -107,15 +119,28 @@ export default function Layout({
             </form>
           )}
 
-          {/* RIGHT - Create Auction */}
-          {isAuthenticated && !hideCreateButton && (
-            <button
-              className="create-btn"
-              onClick={() => navigate("/create-auction")}
-            >
-              + Create Auction
-            </button>
-          )}
+          {/* RIGHT - Actions */}
+            <div className="nav-right-group">
+
+              {onToggleEnded && (
+                <button
+                  className="ended-btn"
+                  onClick={onToggleEnded}
+                >
+                  {showEnded ? "Hide Ended" : "Show Ended"}
+                </button>
+              )}
+
+              {isAuthenticated && !hideCreateButton && (
+                <button
+                  className="create-btn"
+                  onClick={() => navigate("/create-auction")}
+                >
+                  + Create Auction
+                </button>
+              )}
+
+            </div>
 
         </div>
       </header>

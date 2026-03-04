@@ -10,10 +10,7 @@ type Bid = {
   bidDate: string;
   userId: number;
   auctionId: number;
-  user?: {
-    userId: number;
-    userName: string;
-  };
+  userName: string;
 };
 
 type AuctionDetails = {
@@ -25,6 +22,7 @@ type AuctionDetails = {
   endDate: string;
   currentPrice: number;
   userId: number;
+  creatorUserName: string;
   bids: Bid[];
 };
 
@@ -40,7 +38,7 @@ export default function AuctionDetailsPage() {
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
 
-  // Fetch auction
+  // ================= FETCH AUCTION =================
   useEffect(() => {
     async function fetchAuction() {
       try {
@@ -65,13 +63,14 @@ export default function AuctionDetailsPage() {
     fetchAuction();
   }, [id]);
 
-  // Redirect if not found
+  // Redirect if auction not found
   useEffect(() => {
     if (!loading && !auction) {
       navigate("/auctions");
     }
   }, [loading, auction, navigate]);
 
+  // ================= COMPUTED VALUES =================
   const currentHighest = useMemo(() => {
     return bids.length > 0
       ? Math.max(...bids.map(b => b.amount))
@@ -84,9 +83,7 @@ export default function AuctionDetailsPage() {
 
   const isOwner = !!auction && user?.userId === auction.userId;
 
-  // -------------------------
-  // DELETE AUCTION
-  // -------------------------
+  // ================= DELETE AUCTION =================
   const handleDeleteAuction = async () => {
     if (!auction) return;
 
@@ -117,9 +114,7 @@ export default function AuctionDetailsPage() {
     }
   };
 
-  // -------------------------
-  // PLACE BID
-  // -------------------------
+  // ================= PLACE BID =================
   const handlePlaceBid = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -164,11 +159,14 @@ export default function AuctionDetailsPage() {
         })
       });
 
+      const text = await response.text();
+
       if (!response.ok) {
-        throw new Error("Bid failed.");
+        setError(text || `Error ${response.status}`);
+        return;
       }
 
-      const newBid = await response.json();
+      const newBid = JSON.parse(text);
 
       setBids(prev => [newBid, ...prev]);
 
@@ -177,8 +175,9 @@ export default function AuctionDetailsPage() {
       );
 
       setBidAmount("");
+
     } catch (err: any) {
-      setError(err.message);
+      setError("Server connection failed.");
     }
   };
 
@@ -191,11 +190,6 @@ export default function AuctionDetailsPage() {
   }
 
   if (!auction) return null;
-
-  console.log("Logged in userId:", user?.userId);
-console.log("Auction owner userId:", auction?.userId);
-console.log("Is Owner:", user?.userId === auction?.userId);
-
 
   return (
     <Layout showSearch showReturn searchQuery={query} onSearchChange={setQuery}>
@@ -218,6 +212,10 @@ console.log("Is Owner:", user?.userId === auction?.userId);
                 <p>{auction.author}</p>
 
                 <div>
+                  Owner: <strong>{auction.creatorUserName}</strong>
+                </div>
+
+                <div>
                   Ends: {new Date(auction.endDate).toLocaleString()}
                 </div>
 
@@ -233,7 +231,6 @@ console.log("Is Owner:", user?.userId === auction?.userId);
 
                 <p>{auction.description}</p>
 
-                {/* EDIT and DELETE BUTTON */}
                 {isOwner && !isAuctionClosed && (
                   <div style={{ display: "flex", gap: "10px", marginTop: "12px" }}>
                     <button
@@ -293,7 +290,14 @@ console.log("Is Owner:", user?.userId === auction?.userId);
                     bids.map(b => (
                       <div key={b.bidId} style={{ marginBottom: "8px" }}>
                         <div>
-                          {b.amount} kr — {b.user?.userName ?? "User"}
+                          <strong>{b.amount} kr</strong> - {" "}
+                            {b.userId === user?.userId ? (
+                              <span style={{ color: "green", fontWeight: "bold" }}>
+                                You
+                              </span>
+                            ) : (
+                              <span>{b.userName}</span>
+                            )}
                         </div>
                         <div style={{ fontSize: "12px", color: "#64748b" }}>
                           {new Date(b.bidDate).toLocaleString()}

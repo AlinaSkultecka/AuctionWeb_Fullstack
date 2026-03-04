@@ -26,5 +26,7 @@ namespace Lab3_v2_Backend.Data.Interfaces
         Task<Auction?> GetByIdWithUserAsync(int auctionId);
 
         Task DeleteAsync(Auction auction);
+
+        Task<List<Auction>> GetAllWithUserAsync();
     }
 }

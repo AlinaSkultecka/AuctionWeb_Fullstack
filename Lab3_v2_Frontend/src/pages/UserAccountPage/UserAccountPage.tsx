@@ -5,10 +5,10 @@ import Layout from "../../components/Layout/Layout";
 import "./UserAccountPage.css";
 
 export default function UserAccountPage() {
-  const { user, logout } = useAuth();
+  const { user, logout, token } = useAuth();
   const navigate = useNavigate();
 
-  // 👇 Always define hooks first
+  // ================= STATE =================
   const [preview, setPreview] = useState<string>(user?.photoUrl ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
 
@@ -16,12 +16,17 @@ export default function UserAccountPage() {
   const [newPassword, setNewPassword] = useState("");
   const [repeatNewPassword, setRepeatNewPassword] = useState("");
 
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  // ================= VALIDATION =================
   const passwordValid = useMemo(() => {
     if (!newPassword) return true;
     return newPassword.length >= 6 && newPassword === repeatNewPassword;
   }, [newPassword, repeatNewPassword]);
 
-  // 👇 NOW safe to conditionally return
+  // ================= PROTECT PAGE =================
   if (!user) {
     return (
       <Layout hideCreateButton>
@@ -32,6 +37,7 @@ export default function UserAccountPage() {
     );
   }
 
+  // ================= PHOTO PREVIEW =================
   const handlePickPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -40,26 +46,118 @@ export default function UserAccountPage() {
     setPreview(url);
   };
 
+  // ================= SAVE PROFILE (EMAIL + PHOTO) =================
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Profile saved (connect backend here)");
+    setMessage("Profile save logic not connected yet.");
   };
 
-  const handleChangePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // ================= CHANGE PASSWORD =================
+const handleChangePassword = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (!passwordValid) {
-      alert("New password must match and be 6+ characters.");
+  setError(null);
+  setMessage(null);
+
+  if (!passwordValid) {
+    setError("New password must match and be at least 6 characters.");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const response = await fetch(
+      "http://localhost:5064/api/User/update-password",
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+          confirmNewPassword: repeatNewPassword,
+        }),
+      }
+    );
+
+    // Debugging info
+    console.log("Status:", response.status);
+    console.log("StatusText:", response.statusText);
+
+    const responseText = await response.text();
+    console.log("Server response:", responseText);
+
+    if (!response.ok) {
+      setError(responseText || `Error ${response.status}`);
       return;
     }
 
+    setMessage(responseText || "Password updated successfully!");
+
+    // Clear only after success
     setCurrentPassword("");
     setNewPassword("");
     setRepeatNewPassword("");
 
-    alert("Password updated (connect backend here)");
-  };
+  } catch (err) {
+    console.error("Network error:", err);
+    setError("Server connection failed.");
+  } finally {
+    setLoading(false);
+  }
+};
 
+// ================= DELETE ACCOUNT =================
+const handleDeleteAccount = async () => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to permanently delete your account? This cannot be undone."
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+
+    const response = await fetch(
+      "http://localhost:5064/api/User/me",
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log("Delete status:", response.status);
+
+    const text = await response.text();
+    console.log("Delete response:", text);
+
+    if (!response.ok) {
+      setError(text || "Failed to delete account.");
+      return;
+    }
+
+    alert("Your account has been deleted.");
+
+    // Logout and redirect
+    logout();
+    navigate("/");
+
+  } catch (err) {
+    console.error("Delete error:", err);
+    setError("Server connection failed.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+  // ================= RENDER =================
   return (
     <Layout hideCreateButton>
       <div className="account-container">
@@ -76,9 +174,7 @@ export default function UserAccountPage() {
                 ←
               </button>
 
-              <div>
-                <h3 className="account-title">My Account</h3>
-              </div>
+              <h3 className="account-title">My Account</h3>
             </div>
 
             <div className="profile-photo">
@@ -117,18 +213,14 @@ export default function UserAccountPage() {
             </div>
 
             <div className="actions">
-              <button
-                className="secondary"
-                type="button"
-                onClick={logout}
-              >
+              <button className="secondary" type="button" onClick={logout}>
                 Logout
               </button>
 
               <button
                 className="danger"
                 type="button"
-                onClick={() => alert("Delete account logic here")}
+                onClick={handleDeleteAccount}
               >
                 Delete account
               </button>
@@ -162,14 +254,13 @@ export default function UserAccountPage() {
             {/* PASSWORD UPDATE */}
             <form onSubmit={handleChangePassword} className="pw-form">
 
-              <div className="field" id = "current-pw">
+              <div className="field">
                 <label>Current password</label>
                 <input
                   type="password"
+                  autoComplete="current-password"
                   value={currentPassword}
-                  onChange={(e) =>
-                    setCurrentPassword(e.target.value)
-                  }
+                  onChange={(e) => setCurrentPassword(e.target.value)}
                   required
                 />
               </div>
@@ -179,10 +270,9 @@ export default function UserAccountPage() {
                   <label>New password</label>
                   <input
                     type="password"
+                    autoComplete="new-password"
                     value={newPassword}
-                    onChange={(e) =>
-                      setNewPassword(e.target.value)
-                    }
+                    onChange={(e) => setNewPassword(e.target.value)}
                     required
                   />
                 </div>
@@ -191,10 +281,9 @@ export default function UserAccountPage() {
                   <label>Repeat new password</label>
                   <input
                     type="password"
+                    autoComplete="new-password"
                     value={repeatNewPassword}
-                    onChange={(e) =>
-                      setRepeatNewPassword(e.target.value)
-                    }
+                    onChange={(e) => setRepeatNewPassword(e.target.value)}
                     required
                   />
                 </div>
@@ -206,9 +295,13 @@ export default function UserAccountPage() {
                 </small>
               )}
 
-              <button className="primary" type="submit">
-                Update password
+              {error && <p className="error">{error}</p>}
+              {message && <p className="success">{message}</p>}
+
+              <button className="primary" type="submit" disabled={loading}>
+                {loading ? "Updating..." : "Update password"}
               </button>
+
             </form>
 
           </div>

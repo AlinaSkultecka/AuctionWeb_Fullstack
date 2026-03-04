@@ -28,10 +28,11 @@ namespace Lab3_v2_Backend.Data.Repos
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        // -------------------- DELETE USER --------------------
+        // -------------------- DELETE (soft) USER --------------------
         public async Task DeleteAsync(User user)
         {
-            _context.Users.Remove(user);
+            user.IsActive = false;
+            _context.Users.Update(user);
             await _context.SaveChangesAsync();
         }
 

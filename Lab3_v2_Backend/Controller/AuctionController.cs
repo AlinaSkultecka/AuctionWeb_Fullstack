@@ -1,5 +1,7 @@
 ﻿using Lab3_v2_Backend.Core.DTOs.Auction;
+using Lab3_v2_Backend.Core.Services;
 using Lab3_v2_Backend.Core.Services.Interface;
+using Lab3_v2_Backend.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -69,10 +71,12 @@ namespace Lab3_v2_Backend.Controllers
         // -------------------- UPDATE --------------------
 
         [Authorize]
-        [HttpPut]
-        public async Task<IActionResult> Update(UpdateAuctionDto dto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, UpdateAuctionDto dto)
         {
             int userId = int.Parse(User.FindFirst("id")!.Value);
+
+            dto.AuctionId = id; // ensure correct id
 
             var success = await _auctionService.UpdateAsync(dto, userId);
 
@@ -80,7 +84,7 @@ namespace Lab3_v2_Backend.Controllers
                 return BadRequest("Update failed.");
 
             return Ok("Auction updated successfully.");
-        }
+        } 
 
         // -------------------- DELETE --------------------
         [Authorize]
@@ -97,7 +101,7 @@ namespace Lab3_v2_Backend.Controllers
             return Ok("Auction deleted successfully.");
         }
 
-        // -------------------- DEACTIVATE (ADMIN) --------------------
+        // -------------------- DEACTIVATE and REACTIVATE (ADMIN) --------------------
 
         [Authorize(Roles = "Admin")]
         [HttpPut("deactivate/{auctionId}")]
@@ -109,6 +113,28 @@ namespace Lab3_v2_Backend.Controllers
                 return NotFound();
 
             return Ok("Auction deactivated.");
+        }
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("reactivate/{auctionId}")]
+        public async Task<IActionResult> Reactivate(int auctionId)
+        {
+            var success = await _auctionService.ReactivateAsync(auctionId);
+
+            if (!success)
+                return NotFound();
+
+            return Ok("Auction reactivated.");
+        }
+
+        // -------------------- GET ALL FOR ADMIN --------------------
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin")]
+        public async Task<IActionResult> GetAllForAdmin()
+        {
+            var auctions = await _auctionService.GetAllForAdminAsync();
+            return Ok(auctions);
         }
     }
 }

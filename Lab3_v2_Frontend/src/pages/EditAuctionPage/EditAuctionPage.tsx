@@ -85,7 +85,7 @@ export default function EditAuctionPage() {
       return;
     }
 
-    navigate(`/auction/${id}`);
+    navigate(`/auctions/${id}`);
   };
 
   if (loading) {

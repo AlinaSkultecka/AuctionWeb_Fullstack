@@ -1,11 +1,12 @@
 ﻿using Lab3_v2_Backend.Core.DTOs;
 using Lab3_v2_Backend.Core.DTOs.User;
+using Lab3_v2_Backend.Core.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
 using System.IO;
-using Lab3_v2_Backend.Core.Services.Interface;
 
 namespace Lab3_v2_Backend.Controllers
 {
@@ -65,14 +66,18 @@ namespace Lab3_v2_Backend.Controllers
         [HttpPut("update-password")]
         public async Task<IActionResult> UpdatePassword(UpdatePasswordDto dto)
         {
-            int userId = int.Parse(User.FindFirst("id")!.Value);
+            try
+            {
+                int userId = int.Parse(User.FindFirst("id")!.Value);
 
-            var success = await _userService.UpdatePasswordAsync(userId, dto);
+                await _userService.UpdatePasswordAsync(userId, dto);
 
-            if (!success)
-                return BadRequest("Password update failed.");
-
-            return Ok("Password updated successfully.");
+                return Ok("Password updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // -------------------- DELETE USER --------------------
@@ -90,7 +95,7 @@ namespace Lab3_v2_Backend.Controllers
             return Ok("Your account has been deleted.");
         }
 
-        // -------------------- DEACTIVATE USER (ADMIN) --------------------
+        // -------------------- DEACTIVATE and REACTIVATE USER (ADMIN) --------------------
 
         [Authorize(Roles = "Admin")]
         [HttpPut("deactivate/{userId:int}")]
@@ -102,6 +107,18 @@ namespace Lab3_v2_Backend.Controllers
                 return NotFound();
 
             return Ok("User deactivated.");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("reactivate/{userId:int}")]
+        public async Task<IActionResult> Reactivate(int userId)
+        {
+            var success = await _userService.ReactivateAsync(userId);
+
+            if (!success)
+                return NotFound();
+
+            return Ok("User reactivated.");
         }
 
         //-------------------- UPLOAD PHOTO --------------------

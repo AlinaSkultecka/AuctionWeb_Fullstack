@@ -37,7 +37,7 @@ namespace Lab3_v2_Backend.Core.Services
                 return null;
 
             // Auction must be open
-            if (auction.EndDate < DateTime.UtcNow)
+            if (auction.EndDate < DateTime.Now)
                 return null;
 
             // User cannot bid on own auction
@@ -59,6 +59,11 @@ namespace Lab3_v2_Backend.Core.Services
             bid.BidDate = DateTime.UtcNow;
 
             await _bidRepo.AddAsync(bid);
+
+            // UPDATE AUCTION CURRENT PRICE
+            auction.CurrentPrice = dto.Amount;
+
+            await _auctionRepo.UpdateAsync(auction);
 
             var createdBid = await _bidRepo.GetByIdWithUserAsync(bid.BidId);
 

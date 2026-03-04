@@ -40,7 +40,8 @@
 
 .login-btn,
 .account-btn,
-.logout-btn {
+.logout-btn,
+.nav-btn {
   padding: 0.6rem 1rem;
   border-radius: 8px;
   border: none;
@@ -56,6 +57,11 @@
 
 .login-btn:hover {
   background-color: #1d4ed8;
+}
+
+.nav-btn {
+  background: #0d98d8;
+  color: white;
 }
 
 .account-btn {
@@ -165,6 +171,24 @@
   flex: 1;
   padding: 2rem;
 }
+
+.nav-right-group {
+  display: flex;
+  gap: 10px;
+}
+
+.ended-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #475569;
+  color: white;
+  cursor: pointer;
+}
+
+.ended-btn:hover {
+  background: #334155;
+}  
 
 /* ================= RESPONSIVE ================= */
 

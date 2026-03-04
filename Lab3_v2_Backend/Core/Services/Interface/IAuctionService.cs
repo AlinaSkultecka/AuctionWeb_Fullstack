@@ -19,8 +19,11 @@ namespace Lab3_v2_Backend.Core.Services.Interface
         // Delete auction
         Task<bool> DeleteAsync(int auctionId, int userId);
 
-        // Deactivate auction (admin only)
+        // Deactivate and Reactivate auction (admin only)
         Task<bool> DeactivateAsync(int auctionId);
+        Task<bool> ReactivateAsync(int auctionId);
+
+        Task<List<AdminAuctionDto>> GetAllForAdminAsync();
 
         // 🔎 Advanced search for book auctions
         Task<List<AuctionResponseDto>> SearchAsync(

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Lab3_v2_Backend.Core.DTOs;
-using Lab3_v2_Backend.Data.Entities;
-using Lab3_v2_Backend.Data.Interfaces;
 using Lab3_v2_Backend.Core.DTOs.Auction;
 using Lab3_v2_Backend.Core.Services.Interface;
+using Lab3_v2_Backend.Data.Entities;
+using Lab3_v2_Backend.Data.Interfaces;
+using Lab3_v2_Backend.Data.Repos;
+using Microsoft.AspNetCore.Identity;
 
 namespace Lab3_v2_Backend.Core.Services
 {
@@ -209,7 +211,7 @@ namespace Lab3_v2_Backend.Core.Services
             return true;
         }
 
-        // -------------------- DEACTIVATE --------------------
+        // -------------------- DEACTIVATE/REACTIVATE ADMIN --------------------
 
         public async Task<bool> DeactivateAsync(int auctionId)
         {
@@ -223,6 +225,34 @@ namespace Lab3_v2_Backend.Core.Services
             await _auctionRepo.UpdateAsync(auction);
 
             return true;
+        }
+
+        public async Task<bool> ReactivateAsync(int auctionId)
+        {
+            var auction = await _auctionRepo.GetByIdAsync(auctionId);
+
+            if (auction == null)
+                return false;
+
+            auction.IsActive = true;
+
+             await _auctionRepo.UpdateAsync(auction);
+
+            return true;
+        }
+
+        // -------------------- GET ALL FOR ADMIN --------------------
+        public async Task<List<AdminAuctionDto>> GetAllForAdminAsync()
+        {
+            var auctions = await _auctionRepo.GetAllAsync();
+
+            return auctions.Select(a => new AdminAuctionDto
+            {
+                AuctionId = a.AuctionId,
+                Title = a.BookTitle,
+                OwnerUserName = a.User.UserName,
+                IsActive = a.IsActive
+            }).ToList();
         }
 
         // -------------------- PRIVATE HELPER --------------------

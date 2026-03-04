@@ -105,25 +105,37 @@ namespace Lab3_v2_Backend.Core.Services
             var user = await _userRepo.GetByIdAsync(userId);
 
             if (user == null)
-                return false;
+                throw new Exception("User not found.");
 
-            var result = _passwordHasher.VerifyHashedPassword(
+            var verifyResult = _passwordHasher.VerifyHashedPassword(
                 user,
                 user.PasswordHash,
                 dto.CurrentPassword
             );
 
-            if (result == PasswordVerificationResult.Failed)
-                return false;
+            if (verifyResult == PasswordVerificationResult.Failed)
+                throw new Exception("Current password is incorrect.");
 
-            user.PasswordHash = _passwordHasher.HashPassword(user, dto.NewPassword); ;
+            if (dto.NewPassword.Length < 6)
+                throw new Exception("New password must be at least 6 characters.");
+
+            var samePasswordCheck = _passwordHasher.VerifyHashedPassword(
+                user,
+                user.PasswordHash,
+                dto.NewPassword
+            );
+
+            if (samePasswordCheck == PasswordVerificationResult.Success)
+                throw new Exception("New password cannot be the same as current password.");
+
+            user.PasswordHash = _passwordHasher.HashPassword(user, dto.NewPassword);
 
             await _userRepo.UpdateUserAsync(user);
 
             return true;
         }
 
-        // -------------------- DELETE USER --------------------
+        // -------------------- DELETE (soft) USER --------------------
         public async Task<bool> DeleteAsync(int userId)
         {
             var user = await _userRepo.GetByIdAsync(userId);
@@ -131,12 +143,14 @@ namespace Lab3_v2_Backend.Core.Services
             if (user == null)
                 return false;
 
-            await _userRepo.DeleteAsync(user);
+            user.IsActive = false;
+
+            await _userRepo.UpdateUserAsync(user);
 
             return true;
         }
 
-        // -------------------- DEACTIVATE USER --------------------
+        // -------------------- DEACTIVATE/REACTIVATE USER --------------------
 
         public async Task<bool> DeactivateAsync(int userId)
         {
@@ -146,6 +160,20 @@ namespace Lab3_v2_Backend.Core.Services
                 return false;
 
             user.IsActive = false;
+
+            await _userRepo.UpdateUserAsync(user);
+
+            return true;
+        }
+
+        public async Task<bool> ReactivateAsync(int userId)
+        {
+            var user = await _userRepo.GetByIdAsync(userId);
+
+            if (user == null)
+                return false;
+
+            user.IsActive = true;
 
             await _userRepo.UpdateUserAsync(user);
 

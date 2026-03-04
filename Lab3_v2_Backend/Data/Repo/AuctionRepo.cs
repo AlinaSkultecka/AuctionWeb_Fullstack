@@ -25,6 +25,13 @@ namespace Lab3_v2_Backend.Data.Repos
                 .ToListAsync();
         }
 
+        public async Task<List<Auction>> GetAllWithUserAsync()
+        {
+            return await _context.Auctions
+                .Include(a => a.User)
+                .ToListAsync();
+        }
+
         // -------------------- GET BY ID --------------------
 
         public async Task<Auction?> GetByIdAsync(int auctionId)

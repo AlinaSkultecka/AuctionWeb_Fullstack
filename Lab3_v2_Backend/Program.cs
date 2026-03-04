@@ -1,6 +1,6 @@
-using Lab3_v2_Backend.Data;
 using Lab3_v2_Backend.Core.Services;
 using Lab3_v2_Backend.Core.Services.Interface;
+using Lab3_v2_Backend.Data;
 using Lab3_v2_Backend.Data;
 using Lab3_v2_Backend.Data.Entities;
 using Lab3_v2_Backend.Data.Interfaces;
@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -65,7 +66,9 @@ builder.Services
             ValidateIssuerSigningKey = true,
             IssuerSigningKey =
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
-            ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero,
+
+            RoleClaimType = ClaimTypes.Role
         };
     });
 
@@ -102,7 +105,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173")
+            policy.WithOrigins("http://localhost:5174")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });

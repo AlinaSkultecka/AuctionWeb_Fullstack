@@ -39,6 +39,9 @@ namespace Lab3_v2_Backend.Data
                 .HasForeignKey(b => b.AuctionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<User>()
+                .HasQueryFilter(u => u.IsActive);
+
             // Admin
             var admin = new User
             {
@@ -47,7 +50,7 @@ namespace Lab3_v2_Backend.Data
                 Email = "admin@email.com",
                 IsActive = true,
                 IsAdmin = true,
-                PasswordHash = "AQAAAAIAAYagAAAAEOgp0MxIv7GD8lviv7v7R9l + 6Ps9YoMDmG4jqdVlBhKzlT4EMuD6XQEehshsKo6MGg =="
+                PasswordHash = "AQAAAAIAAYagAAAAEG3LwzijmoDB/BkTxLHGZyNk8Vi5MWaWjL2dxt8/peRYXN/Nar49sWGPONZQT3LLVQ=="
             };
 
             modelBuilder.Entity<User>().HasData(admin);

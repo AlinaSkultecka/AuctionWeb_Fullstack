@@ -38,6 +38,7 @@ namespace Lab3_v2_Backend.Data.Repos
         public async Task<Bid?> GetHighestBidAsync(int auctionId)
         {
             return await _context.Bids
+                .Include(b => b.User)
                 .Where(b => b.AuctionId == auctionId)
                 .OrderByDescending(b => b.Amount)
                 .FirstOrDefaultAsync();

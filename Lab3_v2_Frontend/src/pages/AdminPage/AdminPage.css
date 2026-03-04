@@ -1,0 +1,196 @@
+/* ================= MAIN CONTAINER ================= */
+
+.admin-container {
+  padding: 60px 30px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #f8fafc, #dbeafe);
+  min-height: 100vh;
+}
+
+/* ================= HEADER ================= */
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.admin-title {
+  font-size: 36px;
+  font-weight: 600;
+  color: #0f172a;
+  text-align: center;
+  flex: 1;
+  letter-spacing: -0.5px;
+}
+
+.create-return-btn {
+  background: transparent;
+  border: none;
+  color: #2563eb;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.2s ease;
+}
+
+.create-return-btn:hover {
+  color: #1d4ed8;
+  transform: translateX(-2px);
+}
+
+/* ================= CARD ================= */
+
+.admin-card {
+  background: white;
+  border-radius: 22px;
+  padding: 30px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+  margin-bottom: 35px;
+  transition: all 0.25s ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+}
+
+/* ================= SECTION HEADER ================= */
+
+.admin-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.admin-section-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* ================= LIST ================= */
+
+.admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ================= ITEM ================= */
+
+.admin-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 22px;
+  border-radius: 16px;
+  transition: all 0.2s ease;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.admin-item:hover {
+  transform: translateY(-2px);
+}
+
+/* ================= STATUS COLORS ================= */
+
+.admin-item.active-item {
+  border-left: 6px solid #22c55e;
+  background: #f0fdf4;
+}
+
+.admin-item.inactive-item {
+  border-left: 6px solid #ef4444;
+  background: #fef2f2;
+}
+
+/* ================= BUTTON CONTAINER ================= */
+
+.admin-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ================= BUTTONS ================= */
+
+.admin-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+/* View */
+.admin-btn.view {
+  background: #0ea5e9;
+  color: white;
+}
+
+.admin-btn.view:hover {
+  background: #0284c7;
+  transform: translateY(-2px);
+}
+
+/* Deactivate */
+.admin-btn.deactivate {
+  background: #ef4444;
+  color: white;
+}
+
+.admin-btn.deactivate:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+}
+
+/* Reactivate */
+.admin-btn.reactivate {
+  background: #22c55e;
+  color: white;
+}
+
+.admin-btn.reactivate:hover {
+  background: #16a34a;
+  transform: translateY(-2px);
+}
+
+/* ================= TOGGLE BUTTON ================= */
+
+.admin-toggle-btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background-color: #3b82f6;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.admin-toggle-btn:hover {
+  background-color: #2563eb;
+  transform: scale(1.05);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+  .admin-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .admin-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

@@ -16,7 +16,10 @@ namespace Lab3_v2_Backend.Core.Services.Interface
          Task<bool> DeactivateAsync(int userId);
 
          Task<bool> DeleteAsync(int userId);
+
          Task<string?> UploadPhotoAsync(int userId, IFormFile file);
+
+         Task<bool> ReactivateAsync(int userId);
 
     }
 }
