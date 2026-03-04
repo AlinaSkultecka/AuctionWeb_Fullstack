@@ -80,4 +80,4 @@ http://localhost:5174
 ## 👨‍💻 Author
 Alina Skultecka
 
-Student project created for the **.NET Cloud Development course 🎓**.
+Student project created for the **Web Development course 🎓**.
