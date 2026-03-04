@@ -35,14 +35,16 @@ The project demonstrates fullstack development including **REST APIs, authentica
 ## 📸 Screenshots
 
 ### Home Page
-![Home](<img width="1919" height="940" alt="HomePage" src="https://github.com/user-attachments/assets/7fc2e8ab-13c7-4299-9dae-23062786f0d3" />
-)
+<img width="700" height="600" alt="HomePage" src="https://github.com/user-attachments/assets/52f04b87-2f62-4d49-8e6e-9b48a7195d64" />
+
 
 ### Auctions Page
-![Auctions](<img width="1917" height="909" alt="AuctionPage" src="https://github.com/user-attachments/assets/252c8abf-2a20-4636-8ef7-fece19e55f81" />)
+<img width="700" height="600" alt="AuctionPage" src="https://github.com/user-attachments/assets/6772ec5c-1953-4bda-80b0-1d7fb0f6b41b" />
+
 
 ### Auction Details
-![Details](<img width="1919" height="865" alt="AuctionDetailsPage" src="https://github.com/user-attachments/assets/2a002a49-1d17-41e7-822a-3f2fcd5347bc" />)
+<img width="700" height="600" alt="AuctionDetailsPage" src="https://github.com/user-attachments/assets/1adc44d8-0bf4-4b98-9b3a-d44a96b15760" />
+
 
 # 🚀 How to Run the Project
 
