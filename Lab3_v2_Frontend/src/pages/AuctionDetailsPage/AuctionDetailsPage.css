@@ -281,10 +281,39 @@
 }  
 
 
-/* Responsive */
+
+/* ======================= */
+/* TABLET */
+/* ======================= */
+
 @media (max-width: 900px) {
+
   .details-grid {
     grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .bid-card {
+    border-left: none;
+    border-top: 1px solid #e2e8f0;
+    padding-left: 0;
+    padding-top: 20px;
+  }
+
+  .book-card {
+    grid-template-columns: 220px 1fr;
+  }
+
+}
+
+/* ======================= */
+/* MOBILE */
+/* ======================= */
+
+@media (max-width: 600px) {
+
+  .details-card {
+    padding: 18px;
   }
 
   .book-card {
@@ -292,6 +321,31 @@
   }
 
   .book-image {
-    min-height: 260px;
+    height: 260px;
   }
+
+  .book-info h1 {
+    font-size: 22px;
+  }
+
+  .bid-card input {
+    width: 100%;
+  }
+
+}
+
+/* ======================= */
+/* SMALL MOBILE */
+/* ======================= */
+
+@media (max-width: 420px) {
+
+  .book-image {
+    height: 220px;
+  }
+
+  .book-info h1 {
+    font-size: 20px;
+  }
+
 }

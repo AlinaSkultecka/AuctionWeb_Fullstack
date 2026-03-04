@@ -1,16 +1,18 @@
 /* Full screen center */
 .auth-container {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   background: linear-gradient(135deg, #ffdf3e, #fd77ba);
+  padding: 20px;
 }
 
 /* Main card */
 .auth-card {
   width: 850px;
-  height: 500px;
+  max-width: 100%;
+  min-height: 500px;
   display: flex;
   border-radius: 20px;
   overflow: hidden;
@@ -27,6 +29,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 .auth-left p {
@@ -35,10 +38,7 @@
   font-family: "Averia Libre", cursive;
   font-weight: 700;
   letter-spacing: 0.5px;
-
-  justify-content: center;   /* vertical center */
-  align-items: center;       /* horizontal center */
-  text-align: center;        /* center text */
+  text-align: center;
 }
 
 /* RIGHT SIDE */
@@ -67,6 +67,7 @@
   border-radius: 8px;
   border: 1px solid #ddd;
   font-size: 15px;
+  width: 100%;
 }
 
 .auth-right input:focus {
@@ -91,6 +92,7 @@
 
 .auth-logo {
   width: 400px;
+  max-width: 100%;
 }
 
 /* Switch link */
@@ -103,4 +105,64 @@
   color: #ec4899;
   cursor: pointer;
   font-weight: 500;
+}
+
+/* ===================== */
+/* 📱 TABLET RESPONSIVE */
+/* ===================== */
+
+@media (max-width: 900px) {
+
+  .auth-card {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .auth-left {
+    padding: 30px;
+  }
+
+  .auth-left p {
+    font-size: 24px;
+  }
+
+  .auth-right {
+    padding: 40px;
+  }
+
+  .auth-logo {
+    width: 250px;
+  }
+}
+
+/* ===================== */
+/* 📱 MOBILE RESPONSIVE */
+/* ===================== */
+
+@media (max-width: 500px) {
+
+  .auth-left {
+    padding: 20px;
+  }
+
+  .auth-right {
+    padding: 30px 20px;
+  }
+
+  .auth-left p {
+    font-size: 20px;
+  }
+
+  .auth-logo {
+    width: 180px;
+  }
+
+  .auth-right h2 {
+    text-align: center;
+  }
+
+  .auth-right button {
+    font-size: 16px;
+  }
+
 }

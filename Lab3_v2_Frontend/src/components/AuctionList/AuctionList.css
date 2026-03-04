@@ -1,46 +1,68 @@
+/* ===================== */
+/* DESKTOP GRID */
+/* ===================== */
+
 .auctions-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+  gap: 16px;
 }
+
+/* Auction card */
 
 .auction-card {
   width: 100%;
+  height: 200px;
   text-align: left;
   border: none;
   background: white;
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
   box-shadow: 0 18px 32px rgba(0, 0, 0, 0.14);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
   display: grid;
   grid-template-columns: 140px 1fr;
 }
 
 .auction-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow: 0 22px 40px rgba(0, 0, 0, 0.18);
 }
 
+/* Image */
+
 .auction-image {
   background: white;
+  border-radius: 20px;
   display: grid;
   place-items: center;
   min-height: 140px;
+  overflow: hidden;
 }
 
 .auction-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 20px;
+  transition: transform 0.2s ease;
 }
+
+/* Image hover zoom */
+
+.auction-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Placeholder */
 
 .img-placeholder {
   font-size: 42px;
   opacity: 0.85;
 }
+
+/* Info section */
 
 .auction-info {
   padding: 14px;
@@ -49,10 +71,24 @@
   gap: 6px;
 }
 
+.auction-info h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.auction-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #475569;
+}
+
+/* Meta info */
+
 .auction-meta {
   display: flex;
   gap: 8px;
   margin-top: 6px;
+  flex-wrap: wrap;
 }
 
 .price-pill,
@@ -62,4 +98,82 @@
   border-radius: 999px;
   border: 1px solid #e2e8f0;
   background: #f8fafc;
+}
+
+/* ===================== */
+/* TABLET */
+/* ===================== */
+
+@media (max-width: 900px) {
+
+  .auctions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .auction-card {
+    grid-template-columns: 120px 1fr;
+  }
+
+  .auction-image {
+    min-height: 120px;
+  }
+
+}
+
+/* ===================== */
+/* MOBILE LIST LAYOUT */
+/* ===================== */
+
+@media (max-width: 700px) {
+
+  .auctions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .auction-card {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    border-radius: 14px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  }
+
+  .auction-image {
+    min-height: 120px;
+  }
+
+  .auction-info {
+    padding: 12px;
+  }
+
+  .auction-meta {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .auction-info h3 {
+    font-size: 16px;
+  }
+
+}
+
+/* ===================== */
+/* SMALL MOBILE */
+/* ===================== */
+
+@media (max-width: 450px) {
+
+  .auction-card {
+    grid-template-columns: 100px 1fr;
+  }
+
+  .auction-image {
+    min-height: 100px;
+  }
+
+  .auction-info h3 {
+    font-size: 15px;
+  }
+
 }
