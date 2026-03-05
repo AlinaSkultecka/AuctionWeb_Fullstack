@@ -35,7 +35,8 @@ The project demonstrates fullstack development including **REST APIs, authentica
 ## 📸 Screenshots
 
 ### Home Page
-<img width="700" height="600" alt="HomePage" src="https://github.com/user-attachments/assets/52f04b87-2f62-4d49-8e6e-9b48a7195d64" />
+<img width="700" height="600" alt="HomePage" src="https://github.com/user-attachments/assets/eb632bae-0cbe-405c-8a31-64bd61673cde" />
+
 
 
 ### Auctions Page
