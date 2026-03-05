@@ -50,6 +50,7 @@ namespace Lab3_v2_Backend.Data.Repos
         public async Task<User?> GetByIdAsync(int id)
         {
             return await _context.Users
+                .IgnoreQueryFilters()
                 .SingleOrDefaultAsync(u => u.UserId == id);
         }
 
@@ -66,6 +67,7 @@ namespace Lab3_v2_Backend.Data.Repos
         public async Task UpdateUserAsync(User userUpdated)
         {
             var userOrg = await _context.Users
+                .IgnoreQueryFilters()
                 .SingleOrDefaultAsync(u => u.UserId == userUpdated.UserId);
 
             if (userOrg == null)

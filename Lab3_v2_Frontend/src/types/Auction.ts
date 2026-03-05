@@ -8,4 +8,5 @@ export type Auction = {
   currentPrice: number;
   creatorUserName: string;
   isActive: boolean;
+  isOpen: boolean;
 };

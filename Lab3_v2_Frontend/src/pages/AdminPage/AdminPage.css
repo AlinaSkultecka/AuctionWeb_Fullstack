@@ -49,6 +49,7 @@
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
   margin-bottom: 35px;
   transition: all 0.25s ease;
+  font-size: 14px;
 }
 
 .admin-card:hover {
@@ -107,6 +108,13 @@
   border-left: 6px solid #ef4444;
   background: #fef2f2;
 }
+
+.admin-item.closed-item {
+  border-left: 6px solid #3b82f6;
+  background: #eaf3ff;
+}
+
+
 
 /* ================= BUTTON CONTAINER ================= */
 

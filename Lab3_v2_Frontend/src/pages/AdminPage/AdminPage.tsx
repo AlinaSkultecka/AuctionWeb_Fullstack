@@ -203,9 +203,11 @@ export default function AdminPage() {
                 <div
                   key={auction.auctionId}
                   className={`admin-item ${
-                    auction.isActive
-                      ? "active-item"
-                      : "inactive-item"
+                    !auction.isActive
+                      ? "inactive-item"
+                      : !auction.isOpen
+                      ? "closed-item"
+                      : "active-item"
                   }`}
                 >
                   <div>
@@ -220,6 +222,13 @@ export default function AdminPage() {
                       {new Date(
                         auction.endDate
                       ).toLocaleDateString()}
+                    </p>
+                    
+                    <p>
+                      Status:
+                      {!auction.isActive && " Deactivated"}
+                      {auction.isActive && !auction.isOpen && " Closed"}
+                      {auction.isActive && auction.isOpen && " Open"}
                     </p>
                   </div>
 
