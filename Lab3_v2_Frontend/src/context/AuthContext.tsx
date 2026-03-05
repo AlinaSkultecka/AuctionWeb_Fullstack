@@ -1,3 +1,5 @@
+// It is how your React app stores and shares login information (user + token) across the entire website.
+
 import { createContext, useContext, useState, useEffect } from "react";
 
 type User = {

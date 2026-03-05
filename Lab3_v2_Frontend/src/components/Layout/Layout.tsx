@@ -25,6 +25,7 @@ export default function Layout({
   showEnded = false,
   onToggleEnded
 }: LayoutProps) {
+  
   const navigate = useNavigate();
   const { isAuthenticated, logout, user } = useAuth();
 
@@ -127,7 +128,7 @@ export default function Layout({
                   className="ended-btn"
                   onClick={onToggleEnded}
                 >
-                  {showEnded ? "Hide Ended" : "Show Ended"}
+                  {showEnded ? "Hide Ended Auctions" : "Show Ended Auctions"}
                 </button>
               )}
 

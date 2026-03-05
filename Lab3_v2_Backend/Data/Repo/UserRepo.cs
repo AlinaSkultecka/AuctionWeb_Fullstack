@@ -40,7 +40,9 @@ namespace Lab3_v2_Backend.Data.Repos
 
         public async Task<List<User>> GetAllUsersAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users
+                .IgnoreQueryFilters()
+                .ToListAsync();
         }
 
         // -------------------- GET USER BY ID --------------------

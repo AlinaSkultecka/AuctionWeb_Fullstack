@@ -4,6 +4,19 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import AdminAuctionPreview from "../../components/AdminAuctionPreview/AdminAuctionPreview";
 import type { Auction } from "../../types/Auction";
+
+import {
+  getAllUsers,
+  deactivateUser,
+  reactivateUser
+} from "../../services/adminService";
+
+import {
+  getAuctionsAdmin,
+  deactivateAuction,
+  reactivateAuction
+} from "../../services/auctionService";
+
 import "./AdminPage.css";
 
 type User = {
@@ -28,71 +41,61 @@ export default function AdminPage() {
     loadUsers();
   }, []);
 
-  // -------------------- LOAD USERS --------------------
+  // ================= LOAD USERS =================
 
   const loadUsers = async () => {
-    const response = await fetch("http://localhost:5064/api/User", {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    if (!token) return;
 
-    if (!response.ok) return;
-
-    const data = await response.json();
-    setUsers(data);
+    try {
+      const data = await getAllUsers(token);
+      setUsers(data);
+    } catch (error) {
+      console.error("Failed to load users", error);
+    }
   };
 
-  // -------------------- USER ACTIONS --------------------
+  // ================= USER ACTIONS =================
 
   const handleDeactivateUser = async (userId: number) => {
-    await fetch(`http://localhost:5064/api/User/deactivate/${userId}`, {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    if (!token) return;
+
+    await deactivateUser(userId, token);
     loadUsers();
   };
 
   const handleReactivateUser = async (userId: number) => {
-    await fetch(`http://localhost:5064/api/User/reactivate/${userId}`, {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    if (!token) return;
+
+    await reactivateUser(userId, token);
     loadUsers();
   };
 
-  // -------------------- LOAD AUCTIONS --------------------
+  // ================= LOAD AUCTIONS =================
 
   const loadAuctions = async () => {
-    const response = await fetch("http://localhost:5064/api/Auction", {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    if (!token) return;
 
-    if (!response.ok) return;
-
-    const data = await response.json();
-    setAuctions(data);
+    try {
+      const data = await getAuctionsAdmin(token);
+      setAuctions(data);
+    } catch (error) {
+      console.error("Failed to load auctions", error);
+    }
   };
 
-  // -------------------- AUCTION ACTIONS --------------------
+  // ================= AUCTION ACTIONS =================
 
   const handleDeactivateAuction = async (auctionId: number) => {
-    await fetch(
-      `http://localhost:5064/api/Auction/deactivate/${auctionId}`,
-      {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${token}` }
-      }
-    );
+    if (!token) return;
+
+    await deactivateAuction(auctionId, token);
     loadAuctions();
   };
 
   const handleReactivateAuction = async (auctionId: number) => {
-    await fetch(
-      `http://localhost:5064/api/Auction/reactivate/${auctionId}`,
-      {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${token}` }
-      }
-    );
+    if (!token) return;
+
+    await reactivateAuction(auctionId, token);
     loadAuctions();
   };
 
@@ -100,6 +103,7 @@ export default function AdminPage() {
     <Layout hideCreateButton>
       <div className="admin-container">
 
+        {/* HEADER */}
         <div className="admin-header">
           <button
             className="create-return-btn"
@@ -107,14 +111,18 @@ export default function AdminPage() {
           >
             ← Return
           </button>
+
           <h1 className="admin-title">Admin Dashboard</h1>
+
           <div style={{ width: "80px" }} />
         </div>
 
         {/* ================= USERS ================= */}
+
         <div className="admin-card">
           <div className="admin-section-header">
             <h2>Manage Users</h2>
+
             <button
               className="admin-toggle-btn"
               onClick={() => setShowUsers(!showUsers)}
@@ -135,6 +143,7 @@ export default function AdminPage() {
                   <div>
                     <strong>{user.userName}</strong>
                     <p>{user.email}</p>
+
                     <small>
                       Status: {user.isActive ? "Active" : "Inactive"}
                     </small>
@@ -145,14 +154,18 @@ export default function AdminPage() {
                       {user.isActive ? (
                         <button
                           className="admin-btn deactivate"
-                          onClick={() => handleDeactivateUser(user.userId)}
+                          onClick={() =>
+                            handleDeactivateUser(user.userId)
+                          }
                         >
                           Deactivate
                         </button>
                       ) : (
                         <button
                           className="admin-btn reactivate"
-                          onClick={() => handleReactivateUser(user.userId)}
+                          onClick={() =>
+                            handleReactivateUser(user.userId)
+                          }
                         >
                           Reactivate
                         </button>
@@ -166,14 +179,17 @@ export default function AdminPage() {
         </div>
 
         {/* ================= AUCTIONS ================= */}
+
         <div className="admin-card">
           <div className="admin-section-header">
             <h2>Manage Auctions</h2>
+
             <button
               className="admin-toggle-btn"
               onClick={() => {
                 const state = !showAuctions;
                 setShowAuctions(state);
+
                 if (state) loadAuctions();
               }}
             >
@@ -187,23 +203,32 @@ export default function AdminPage() {
                 <div
                   key={auction.auctionId}
                   className={`admin-item ${
-                    auction.isActive ? "active-item" : "inactive-item"
+                    auction.isActive
+                      ? "active-item"
+                      : "inactive-item"
                   }`}
                 >
                   <div>
                     <strong>{auction.bookTitle}</strong>
+
                     <p>Owner: {auction.creatorUserName}</p>
+
                     <p>Price: {auction.currentPrice} kr</p>
+
                     <p>
                       Ends:{" "}
-                      {new Date(auction.endDate).toLocaleDateString()}
+                      {new Date(
+                        auction.endDate
+                      ).toLocaleDateString()}
                     </p>
                   </div>
 
                   <div className="admin-actions">
                     <button
                       className="admin-btn view"
-                      onClick={() => setSelectedAuction(auction)}
+                      onClick={() =>
+                        setSelectedAuction(auction)
+                      }
                     >
                       View
                     </button>
@@ -212,7 +237,9 @@ export default function AdminPage() {
                       <button
                         className="admin-btn deactivate"
                         onClick={() =>
-                          handleDeactivateAuction(auction.auctionId)
+                          handleDeactivateAuction(
+                            auction.auctionId
+                          )
                         }
                       >
                         Deactivate
@@ -221,7 +248,9 @@ export default function AdminPage() {
                       <button
                         className="admin-btn reactivate"
                         onClick={() =>
-                          handleReactivateAuction(auction.auctionId)
+                          handleReactivateAuction(
+                            auction.auctionId
+                          )
                         }
                       >
                         Reactivate
@@ -234,6 +263,8 @@ export default function AdminPage() {
           )}
         </div>
       </div>
+
+      {/* PREVIEW MODAL */}
 
       {selectedAuction && (
         <AdminAuctionPreview

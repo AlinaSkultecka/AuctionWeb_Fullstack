@@ -2,27 +2,19 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Layout from "../../components/Layout/Layout";
+
+import {
+  getAuctionById,
+  deleteAuction,
+  placeBid
+} from "../../services/auctionService";
+
 import "./AuctionDetailsPage.css";
+import type { Auction } from "../../types/Auction";
+import type { Bid } from "../../types/Bid";
 
-type Bid = {
-  bidId: number;
-  amount: number;
-  bidDate: string;
+type AuctionDetails = Auction & {
   userId: number;
-  auctionId: number;
-  userName: string;
-};
-
-type AuctionDetails = {
-  auctionId: number;
-  bookTitle: string;
-  author: string;
-  description: string;
-  imageUrl?: string;
-  endDate: string;
-  currentPrice: number;
-  userId: number;
-  creatorUserName: string;
   bids: Bid[];
 };
 
@@ -39,31 +31,28 @@ export default function AuctionDetailsPage() {
   const [query, setQuery] = useState("");
 
   // ================= FETCH AUCTION =================
+
   useEffect(() => {
-    async function fetchAuction() {
+    async function loadAuction() {
       try {
-        const response = await fetch(
-          `http://localhost:5064/api/Auction/${id}`
-        );
+        if (!id) return;
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch auction.");
-        }
+        const data = await getAuctionById(id);
 
-        const data = await response.json();
         setAuction(data);
         setBids(data.bids ?? []);
-      } catch (err: any) {
-        setError(err.message);
+      } catch {
+        setError("Failed to load auction.");
       } finally {
         setLoading(false);
       }
     }
 
-    fetchAuction();
+    loadAuction();
   }, [id]);
 
   // Redirect if auction not found
+
   useEffect(() => {
     if (!loading && !auction) {
       navigate("/auctions");
@@ -71,21 +60,24 @@ export default function AuctionDetailsPage() {
   }, [loading, auction, navigate]);
 
   // ================= COMPUTED VALUES =================
+
   const currentHighest = useMemo(() => {
+    if (!auction) return 0;
+
     return bids.length > 0
       ? Math.max(...bids.map(b => b.amount))
-      : auction?.currentPrice ?? 0;
+      : auction.currentPrice;
   }, [bids, auction]);
 
-  const isAuctionClosed = auction
-    ? new Date(auction.endDate) < new Date()
-    : false;
+  const isAuctionClosed =
+    auction && new Date(auction.endDate) < new Date();
 
-  const isOwner = !!auction && user?.userId === auction.userId;
+  const isOwner = auction && user?.userId === auction.userId;
 
   // ================= DELETE AUCTION =================
+
   const handleDeleteAuction = async () => {
-    if (!auction) return;
+    if (!auction || !token) return;
 
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this auction?"
@@ -94,30 +86,20 @@ export default function AuctionDetailsPage() {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(
-        `http://localhost:5064/api/Auction/${auction.auctionId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to delete auction.");
-      }
-
+      await deleteAuction(auction.auctionId, token);
       navigate("/auctions");
-    } catch (err: any) {
-      alert(err.message);
+    } catch {
+      alert("Failed to delete auction.");
     }
   };
 
   // ================= PLACE BID =================
+
   const handlePlaceBid = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (!auction) return;
 
     if (!isAuthenticated) {
       setError("You must be logged in to place a bid.");
@@ -147,26 +129,7 @@ export default function AuctionDetailsPage() {
     }
 
     try {
-      const response = await fetch("http://localhost:5064/api/Bid", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          auctionId: auction?.auctionId,
-          amount
-        })
-      });
-
-      const text = await response.text();
-
-      if (!response.ok) {
-        setError(text || `Error ${response.status}`);
-        return;
-      }
-
-      const newBid = JSON.parse(text);
+      const newBid = await placeBid(auction.auctionId, amount, token!);
 
       setBids(prev => [newBid, ...prev]);
 
@@ -176,10 +139,12 @@ export default function AuctionDetailsPage() {
 
       setBidAmount("");
 
-    } catch (err: any) {
+    } catch {
       setError("Server connection failed.");
     }
   };
+
+  // ================= LOADING =================
 
   if (loading) {
     return (
@@ -191,6 +156,8 @@ export default function AuctionDetailsPage() {
 
   if (!auction) return null;
 
+  // ================= UI =================
+
   return (
     <Layout showSearch showReturn searchQuery={query} onSearchChange={setQuery}>
       <div className="details-container">
@@ -198,6 +165,7 @@ export default function AuctionDetailsPage() {
           <div className="details-grid">
 
             {/* LEFT SIDE */}
+
             <div className="book-card">
               <div className="book-image">
                 {auction.imageUrl ? (
@@ -252,18 +220,21 @@ export default function AuctionDetailsPage() {
             </div>
 
             {/* RIGHT SIDE */}
+
             <div className="bid-card">
               <h2>Place a bid</h2>
 
               {isAuthenticated && !isOwner && !isAuctionClosed ? (
                 <form onSubmit={handlePlaceBid}>
                   <label>Your bid (kr)</label>
+
                   <div>
                     <input
                       value={bidAmount}
                       onChange={e => setBidAmount(e.target.value)}
                       placeholder={`More than ${currentHighest}`}
                     />
+
                     <button type="submit">Bid</button>
                   </div>
 
@@ -284,13 +255,16 @@ export default function AuctionDetailsPage() {
               {!isAuctionClosed ? (
                 <>
                   <h3>Bid history</h3>
+
                   {bids.length === 0 ? (
                     <div>No bids yet</div>
                   ) : (
-                    bids.map(b => (
-                      <div key={b.bidId} style={{ marginBottom: "8px" }}>
-                        <div>
-                          <strong>{b.amount} kr</strong> - {" "}
+                    [...bids]
+                      .sort((a, b) => b.amount - a.amount)
+                      .map(b => (
+                        <div key={b.bidId} style={{ marginBottom: "8px" }}>
+                          <div>
+                            <strong>{b.amount} kr</strong> -{" "}
                             {b.userId === user?.userId ? (
                               <span style={{ color: "green", fontWeight: "bold" }}>
                                 You
@@ -298,12 +272,13 @@ export default function AuctionDetailsPage() {
                             ) : (
                               <span>{b.userName}</span>
                             )}
+                          </div>
+
+                          <div style={{ fontSize: "12px", color: "#64748b" }}>
+                            {new Date(b.bidDate).toLocaleString()}
+                          </div>
                         </div>
-                        <div style={{ fontSize: "12px", color: "#64748b" }}>
-                          {new Date(b.bidDate).toLocaleString()}
-                        </div>
-                      </div>
-                    ))
+                      ))
                   )}
                 </>
               ) : (

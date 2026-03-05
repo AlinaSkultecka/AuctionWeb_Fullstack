@@ -1,14 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "./AuctionList.css";
-
-export interface Auction {
-  auctionId: number;
-  bookTitle: string;
-  author: string;
-  currentPrice: number;
-  endDate: string;
-  imageUrl?: string;
-}
+import type { Auction } from "../../types/Auction";
 
 interface AuctionListProps {
   auctions: Auction[];
@@ -18,7 +10,7 @@ export default function AuctionList({ auctions }: AuctionListProps) {
   const navigate = useNavigate();
 
   const goToDetails = (id: number) => {
-    // ✅ Always allow navigation
+    // Always allow navigation
     navigate(`/auctions/${id}`);
   };
 

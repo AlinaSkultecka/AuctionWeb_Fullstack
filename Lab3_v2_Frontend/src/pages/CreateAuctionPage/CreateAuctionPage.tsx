@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Layout from "../../components/Layout/Layout";
+import { createAuction } from "../../services/auctionService";
+
 import "./CreateAuctionPage.css";
 
 export default function CreateAuctionPage() {
@@ -10,7 +12,7 @@ export default function CreateAuctionPage() {
 
   const [bookTitle, setBookTitle] = useState("");
   const [author, setAuthor] = useState("");
-  const [description, setDescription] = useState("");  
+  const [description, setDescription] = useState("");
   const [isbn, setIsbn] = useState("");
   const [genre, setGenre] = useState("");
   const [condition, setCondition] = useState("");
@@ -40,39 +42,30 @@ export default function CreateAuctionPage() {
       return;
     }
 
-    const price = Math.abs(parseInt(startPrice));
+    const price = Number(startPrice);
 
     if (!price || price <= 0) {
-      setError("Start price must be a whole number greater than 0.");
+      setError("Start price must be greater than 0.");
       return;
     }
 
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5064/api/Auction", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+      await createAuction(
+        {
+          bookTitle,
+          author,
+          description,
+          isbn,
+          genre,
+          condition,
+          startPrice: price,
+          endDate,
+          imageUrl
         },
-      body: JSON.stringify({
-        bookTitle,
-        author,
-        description,
-        isbn,
-        genre,
-        condition,
-        startPrice: Number(startPrice),
-        endDate,
-        imageUrl
-      })
-      });
-
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(text || "Failed to create auction.");
-      }
+        token!
+      );
 
       navigate("/auctions");
 
@@ -108,7 +101,6 @@ export default function CreateAuctionPage() {
             <div className="field">
               <label>Book Title *</label>
               <input
-                type="text"
                 value={bookTitle}
                 onChange={(e) => setBookTitle(e.target.value)}
                 required
@@ -118,7 +110,6 @@ export default function CreateAuctionPage() {
             <div className="field">
               <label>Author *</label>
               <input
-                type="text"
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
                 required
@@ -137,7 +128,6 @@ export default function CreateAuctionPage() {
             <div className="field">
               <label>ISBN</label>
               <input
-                type="text"
                 value={isbn}
                 maxLength={20}
                 onChange={(e) => setIsbn(e.target.value)}
@@ -147,7 +137,6 @@ export default function CreateAuctionPage() {
             <div className="field">
               <label>Genre</label>
               <input
-                type="text"
                 value={genre}
                 maxLength={100}
                 onChange={(e) => setGenre(e.target.value)}
@@ -171,9 +160,9 @@ export default function CreateAuctionPage() {
               <label>Start Price (kr) *</label>
               <input
                 type="number"
+                min="1"
+                step="1"
                 value={startPrice}
-                min="0"
-                step="1"                  // 👈 no decimals
                 onChange={(e) => setStartPrice(e.target.value)}
                 required
               />
@@ -190,9 +179,8 @@ export default function CreateAuctionPage() {
             </div>
 
             <div className="field">
-              <label>Image URL (optional)</label>
+              <label>Image URL</label>
               <input
-                type="text"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
               />

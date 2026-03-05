@@ -1,21 +1,11 @@
 import { useMemo, useState, useEffect } from "react";
 import Layout from "../../components/Layout/Layout";
-import "./AuctionsPage.css";
 import AuctionList from "../../components/AuctionList/AuctionList";
+import { getAuctions } from "../../services/auctionService";
 
-type Auction = {
-  auctionId: number;
-  bookTitle: string;
-  author: string;
-  imageUrl?: string;
-  description: string;
-  startPrice: number;
-  currentPrice: number;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
-  userId: number;
-};
+import "./AuctionsPage.css";
+
+import type { Auction } from "../../types/Auction";
 
 export default function AuctionsPage() {
   const [auctions, setAuctions] = useState<Auction[]>([]);
@@ -25,25 +15,19 @@ export default function AuctionsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchAuctions() {
-      try {
-        const response = await fetch("http://localhost:5064/api/Auction");
-
-        if (!response.ok) {
-          throw new Error("Server error while fetching auctions.");
-        }
-
-        const data = await response.json();
-        setAuctions(data);
-      } catch {
-        setError("Unable to connect to server.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchAuctions();
+    loadAuctions();
   }, []);
+
+  const loadAuctions = async () => {
+    try {
+      const data = await getAuctions();
+      setAuctions(data);
+    } catch {
+      setError("Unable to connect to server.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -83,7 +67,7 @@ export default function AuctionsPage() {
         <div className="empty-state">No auctions available yet.</div>
       )}
 
-      {!loading && !error && auctions.length > 0 && filtered.length === 0 && (
+      {!loading && !error && filtered.length === 0 && (
         <div className="empty-state">No auctions match your search.</div>
       )}
 

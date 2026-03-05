@@ -3,7 +3,7 @@ export type Auction = {
   bookTitle: string;
   author: string;
   description: string;
-  imageUrl: string | null; // IMPORTANT
+  imageUrl: string | null;
   endDate: string;
   currentPrice: number;
   creatorUserName: string;
