@@ -199,6 +199,7 @@
 /* Password form */
 
 .pw-form {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 18px;
